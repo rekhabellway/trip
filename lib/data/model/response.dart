@@ -1,6 +1,6 @@
 import 'dart:developer';
 import 'package:http/http.dart' as http;
-import 'package:trip/view/model/user%20model.dart';
+import 'package:trip/data/model/user%20model.dart';
 
 class ApiService {
   Future<List<UserModel>?> getUsers() async {

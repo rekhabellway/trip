@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:trip/view/model/post_model.dart';
 import '../controller/post_controller.dart';
+import '../data/model/post_model.dart';
 
 class CreatePost extends StatefulWidget {
   final PostModel? model;
@@ -39,6 +39,7 @@ class _CreatePostState extends State<CreatePost> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         automaticallyImplyLeading: true,
         elevation: 0,
@@ -50,49 +51,54 @@ class _CreatePostState extends State<CreatePost> {
       ),
       bottomNavigationBar: ElevatedButton(
           onPressed: () {},
-          child: TextButton(
-              onPressed: () {
-                if (Get.find<PostController>().imageFile == null) {
-                  SnackBar(content: Text('Please select image'));
-                  return;
-                }
-                if (titleController.text.isEmpty) {
-                  SnackBar(content: Text('Please enter title'));
-                  return;
-                }
-                if (descriptionController.text.isEmpty) {
-                  SnackBar(content: Text('Please enter description'));
-                  return;
-                }
-                if (widget.model == null) {
-                  PostModel newModel = PostModel(
-                    id: Random().nextInt(10000),
-                    image: Get.find<PostController>().imageFile!.path,
-                    title: titleController.text,
-                    description: descriptionController.text,
-                    createdAt: DateTime.now(),
-                  );
-                  Get.find<PostController>().addPost(newModel);
-                  Get.back();
-                } else {
-                  widget.model!.image =
-                      Get.find<PostController>().imageFile!.path;
-                  widget.model!.title = titleController.text;
-                  widget.model!.description = descriptionController.text;
-                  Get.find<PostController>().updatePost(widget.model!);
-                  Get.back();
-                }
-              },
-              child: Text(
-                "Submit",
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              ))),
+          child: Container(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: TextButton(
+                onPressed: () {
+                  if (Get.find<PostController>().imageFile == null) {
+                    SnackBar(content: Text('Please select image'));
+                    return;
+                  }
+                  if (titleController.text.isEmpty) {
+                    SnackBar(content: Text('Please enter title'));
+                    return;
+                  }
+                  if (descriptionController.text.isEmpty) {
+                    SnackBar(content: Text('Please enter description'));
+                    return;
+                  }
+                  if (widget.model == null) {
+                    PostModel newModel = PostModel(
+                        id: Random().nextInt(10000),
+                        image: Get.find<PostController>().imageFile!.path,
+                        title: titleController.text,
+                        description: descriptionController.text,
+                        createdAt: DateTime.now(),
+                        likes: 0,);
+                    Get.find<PostController>().addPost(newModel);
+                    Get.back();
+                  } else {
+                    widget.model!.image =
+                        Get.find<PostController>().imageFile!.path;
+                    widget.model!.title = titleController.text;
+                    widget.model!.description = descriptionController.text;
+                    Get.find<PostController>().updatePost(widget.model!);
+                    Get.back();
+                  }
+                },
+                child: Text(
+                  "Submit",
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                )),
+          )),
       body: ListView(
         children: [
           GetBuilder<PostController>(builder: (postController) {
             return Container(
                 child: postController.imageFile == null
+
                     ? TextButton(
                         onPressed: () {
                           _getFromGallery();

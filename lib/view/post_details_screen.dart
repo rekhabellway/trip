@@ -5,7 +5,8 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:trip/controller/post_controller.dart';
-import 'model/post_model.dart';
+import '../data/model/post_model.dart';
+
 
 class PostDetailsScreen extends StatefulWidget {
   final PostModel model;
@@ -19,6 +20,7 @@ class PostDetailsScreen extends StatefulWidget {
 class _PostDetailsScreenState extends State<PostDetailsScreen> {
   TextEditingController commentController = TextEditingController();
   final focusComment = FocusNode();
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -43,6 +45,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
       ),
       bottomNavigationBar: GetBuilder<PostController>(builder: (postController) {
         return Container(
+          margin: EdgeInsets.all(10),
             padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           decoration: BoxDecoration(
               color: Colors.white,
@@ -60,15 +63,17 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
               IconButton(
                   onPressed: () {
                     if (commentController.text.isEmpty) {
-                      SnackBar(content: Text('Please enter comment', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),));
+                      SnackBar(content: Text('Please enter comment',
+                        style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),));
                       return;
                     }
-                    if (postController.commentModel== null) {
+                    if (postController.commentModel == null) {
                       CommentModel newModel = CommentModel(
                         id: Random().nextInt(10000),
                         comment: commentController.text,
                         postId: widget.model.id,
                         createdAt: DateTime.now(),
+
                       );
                       Get.find<PostController>().addComments(newModel);
                       }else{
@@ -86,7 +91,8 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
         );
       } ),
       body: GetBuilder<PostController>(builder: (postController) {
-        return Column(crossAxisAlignment: CrossAxisAlignment.start,
+        return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
           Container(
             padding: EdgeInsets.all(8),
@@ -115,7 +121,7 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                       height: 5,
                     ),
                     Text(
-                      widget.model.description!,
+                  widget.model.description!,
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     ),
                     SizedBox(
@@ -123,6 +129,19 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                     ),
                     Text(
                       DateFormat('yyyy-MM-dd').format(widget.model.createdAt!),
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+                    ),
+                    IconButton(
+                        icon:  Icon(
+                          Icons.favorite_border_outlined,
+                          size: 30,
+                            color: Colors.black,
+                        ),
+                        onPressed: () {
+                          widget.model.likes=widget.model.likes!+1;
+                           Get.find<PostController>().updatePost(widget.model);
+                        }),
+                    Text(  widget.model.likes.toString(),
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     ),
                   ],

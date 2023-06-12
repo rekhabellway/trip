@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'model/response.dart';
-import 'model/user model.dart';
+
+import '../data/model/response.dart';
+import '../data/model/user model.dart';
+
 
 class UserDetailsScreen extends StatefulWidget {
   const UserDetailsScreen({Key? key}) : super(key: key);

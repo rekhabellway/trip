@@ -1,22 +1,21 @@
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:trip/view/model/post_model.dart';
+
+import '../data/model/post_model.dart';
 
 class PostController extends GetxController implements GetxService {
-
   List<PostModel> posts = [];
   PostModel? postModel;
   List<CommentModel> comments = [];
   XFile? imageFile;
-
   CommentModel? commentModel;
 
-  void updateEditingComment(CommentModel? val){
+  void updateEditingComment(CommentModel? val) {
     commentModel = val;
     update();
   }
 
-  void clear(CommentController){
+  void clear(CommentController) {
     clear(CommentController);
   }
 
@@ -25,20 +24,21 @@ class PostController extends GetxController implements GetxService {
     update();
   }
 
-  void deletePost(PostModel val){
+  void deletePost(PostModel val) {
     posts.remove(val);
     update();
   }
 
-  void updatePost(PostModel val){
-    PostModel old = posts.firstWhere((element) => element.id==val.id );
-    old=val;
+  void updatePost(PostModel val) {
+    PostModel old = posts.firstWhere((element) => element.id == val.id);
+    old = val;
     update();
   }
 
-  void updateComment(){
-    CommentModel old = comments.firstWhere((element) => element.id==commentModel!.id! );
-    old=commentModel!;
+  void updateComment() {
+    CommentModel old =
+        comments.firstWhere((element) => element.id == commentModel!.id!);
+    old = commentModel!;
     update();
   }
 
@@ -47,7 +47,7 @@ class PostController extends GetxController implements GetxService {
     update();
   }
 
-  void deleteComments(CommentModel val){
+  void deleteComments(CommentModel val) {
     comments.remove(val);
     update();
   }

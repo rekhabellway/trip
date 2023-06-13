@@ -70,12 +70,13 @@ class _CreatePostState extends State<CreatePost> {
                   }
                   if (widget.model == null) {
                     PostModel newModel = PostModel(
-                        id: Random().nextInt(10000),
-                        image: Get.find<PostController>().imageFile!.path,
-                        title: titleController.text,
-                        description: descriptionController.text,
-                        createdAt: DateTime.now(),
-                        likes: 0,);
+                      id: Random().nextInt(10000),
+                      image: Get.find<PostController>().imageFile!.path,
+                      title: titleController.text,
+                      description: descriptionController.text,
+                      createdAt: DateTime.now(),
+                      likes: 0,
+                    );
                     Get.find<PostController>().addPost(newModel);
                     Get.back();
                   } else {
@@ -98,7 +99,6 @@ class _CreatePostState extends State<CreatePost> {
           GetBuilder<PostController>(builder: (postController) {
             return Container(
                 child: postController.imageFile == null
-
                     ? TextButton(
                         onPressed: () {
                           _getFromGallery();

@@ -1,14 +1,13 @@
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-
 import '../data/model/post_model.dart';
 
 class PostController extends GetxController implements GetxService {
   List<PostModel> posts = [];
-  PostModel? postModel;
   List<CommentModel> comments = [];
   XFile? imageFile;
   CommentModel? commentModel;
+
 
   void updateEditingComment(CommentModel? val) {
     commentModel = val;
@@ -35,7 +34,7 @@ class PostController extends GetxController implements GetxService {
     update();
   }
 
-  void updateComment() {
+  void updateComment(PostModel model) {
     CommentModel old =
         comments.firstWhere((element) => element.id == commentModel!.id!);
     old = commentModel!;

@@ -47,18 +47,21 @@ class PostModel {
 class CommentModel {
   int? id;
   int? postId;
+  int? likes;
   String? comment;
   DateTime? createdAt;
 
   CommentModel({
     this.id,
     this.postId,
+    this.likes,
     this.comment,
     this.createdAt,
   });
 
   factory CommentModel.fromJson(Map<String, dynamic> json) => CommentModel(
     id: json["id"],
+    likes: json["likes"],
     postId: json["post-id"],
     comment: json["comment"],
     createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
@@ -66,6 +69,7 @@ class CommentModel {
 
   Map<String, dynamic> toJson() => {
     "id": id,
+    "likes": likes,
     "post-id": postId,
     "comment": comment,
     "created_at": createdAt?.toIso8601String(),

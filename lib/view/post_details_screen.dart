@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 import 'package:trip/controller/post_controller.dart';
 import '../data/model/post_model.dart';
 
-
 class PostDetailsScreen extends StatefulWidget {
   final PostModel model;
 
@@ -43,10 +42,12 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
-      bottomNavigationBar: GetBuilder<PostController>(builder: (postController) {
+      bottomNavigationBar:
+          GetBuilder<PostController>(builder: (postController) {
         return Container(
           margin: EdgeInsets.all(10),
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: [BoxShadow(blurRadius: 1, color: Colors.grey)]),
@@ -63,8 +64,12 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
               IconButton(
                   onPressed: () {
                     if (commentController.text.isEmpty) {
-                      SnackBar(content: Text('Please enter comment',
-                        style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),));
+                      SnackBar(
+                          content: Text(
+                        'Please enter comment',
+                        style: TextStyle(
+                            color: Colors.red, fontWeight: FontWeight.bold),
+                      ));
                       return;
                     }
                     if (postController.commentModel == null) {
@@ -73,14 +78,16 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                         comment: commentController.text,
                         postId: widget.model.id,
                         createdAt: DateTime.now(),
-
+                        likes: 0,
                       );
                       Get.find<PostController>().addComments(newModel);
-                      }else{
-                      Get.find<PostController>().commentModel!.comment = commentController.text;
-                      Get.find<PostController>().updateComment();
+                    } else {
+                      Get.find<PostController>().commentModel!.comment =
+                          commentController.text;
+                      Get.find<PostController>().updateComment(PostModel());
                       Get.find<PostController>().updateEditingComment(null);
-                    }commentController.text = '';
+                    }
+                    commentController.text = '';
                   },
                   icon: Icon(
                     Icons.send,
@@ -89,13 +96,11 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
             ],
           ),
         );
-      } ),
+      }),
       body: GetBuilder<PostController>(builder: (postController) {
-        return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+        return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Container(
-            padding: EdgeInsets.all(8),
+            padding: EdgeInsets.all(3),
             margin: EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: Colors.grey[300],
@@ -111,38 +116,67 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                   height: 80,
                   width: 120,
                 ),
+                Column(children: [
+                  Text(
+                    widget.model.title.toString(),
+                    style: TextStyle(color: Colors.black, fontSize: 20),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    widget.model.description!,
+                    style: TextStyle(color: Colors.black, fontSize: 20),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    DateFormat('yyyy-MM-dd').format(widget.model.createdAt!),
+                    style: TextStyle(color: Colors.black, fontSize: 20),
+                  ),
+                ]),
                 Column(
                   children: [
-                    Text(
-                      widget.model.title.toString(),
-                      style: TextStyle(color: Colors.black, fontSize: 20),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                  widget.model.description!,
-                      style: TextStyle(color: Colors.black, fontSize: 20),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      DateFormat('yyyy-MM-dd').format(widget.model.createdAt!),
-                      style: TextStyle(color: Colors.black, fontSize: 20),
-                    ),
-                    IconButton(
-                        icon:  Icon(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                      TextButton(
+                          onPressed: () {
+                            widget.model.likes = widget.model.likes! - 1;
+                            Get.find<PostController>().updatePost(widget.model);
+                          },
+                          child: Text(
+                            "-",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 30),
+                          )),
+
+                       Icon(
                           Icons.favorite_border_outlined,
                           size: 30,
-                            color: Colors.black,
+                          color: Colors.red,
                         ),
-                        onPressed: () {
-                          widget.model.likes=widget.model.likes!+1;
-                           Get.find<PostController>().updatePost(widget.model);
-                        }),
-                    Text(  widget.model.likes.toString(),
-                      style: TextStyle(color: Colors.black, fontSize: 20),
+
+                      TextButton(
+                          onPressed: () {
+                            widget.model.likes = widget.model.likes! + 1;
+                            Get.find<PostController>().updatePost(widget.model);
+                          },
+                          child: Text(
+                            "+",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 30),
+                          )),
+
+                    ]),
+                    Text(
+                      widget.model.likes.toString(),
+                      style: TextStyle(color: Colors.red),
                     ),
                   ],
                 ),
@@ -155,9 +189,14 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: postController.comments.where((element) => element.postId==widget.model.id!).toList().length,
+              itemCount: postController.comments
+                  .where((element) => element.postId == widget.model.id!)
+                  .toList()
+                  .length,
               itemBuilder: (BuildContext context, int index) {
-                CommentModel model = postController.comments.where((element) => element.postId==widget.model.id!).toList()[index];
+                CommentModel model = postController.comments
+                    .where((element) => element.postId == widget.model.id!)
+                    .toList()[index];
                 return Container(
                   padding: EdgeInsets.all(8),
                   margin: EdgeInsets.all(8),
@@ -178,11 +217,14 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                           ),
                           IconButton(
                               onPressed: () {
-                                Get.find<PostController>().updateEditingComment(
-                                    model);
-                                  commentController.text = model.comment!;
+                                Get.find<PostController>()
+                                    .updateEditingComment(model);
+                                commentController.text = model.comment!;
                                 focusComment.requestFocus();
+                                Get.find<PostController>().updateComment(model as PostModel);
+
                               },
+
                               icon: Icon(
                                 Icons.edit,
                                 color: Colors.black,
@@ -194,13 +236,13 @@ class _PostDetailsScreenState extends State<PostDetailsScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            DateFormat('yyyy-MM-dd').format(
-                                model.createdAt!),
+                            DateFormat('yyyy-MM-dd').format(model.createdAt!),
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           IconButton(
                               onPressed: () {
-                                Get.find<PostController>().deleteComments(model);
+                                Get.find<PostController>()
+                                    .deleteComments(model);
                               },
                               icon: Icon(
                                 Icons.delete,

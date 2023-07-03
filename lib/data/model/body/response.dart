@@ -1,6 +1,6 @@
 import 'dart:developer';
 import 'package:http/http.dart' as http;
-import 'package:trip/data/model/user%20model.dart';
+import 'package:trip/data/model/response/user%20model.dart';
 
 class ApiService {
   Future<List<UserModel>?> getUsers() async {
@@ -14,9 +14,12 @@ class ApiService {
     } catch (e) {
       log(e.toString());
     }
+    return null;
   }
 }
+
 class ApiConstants {
   static String baseUrl = 'https://jsonplaceholder.typicode.com';
   static String usersEndpoint = '/posts';
 }
+

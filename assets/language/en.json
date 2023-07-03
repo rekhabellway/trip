@@ -1,0 +1,21 @@
+{
+"select_language": "Select Language",
+"save": "Save",
+"select_a_language": "Select a language",
+"home": "Home",
+"back_to_home": "back to home",
+  "CretePost": "CreatePost",
+  "Post_Details": "Post_Details",
+ "Submit": "Submit",
+  "PICK FROM GALLERY": "PICK FROM GALLERY",
+  "title": "title",
+  "comments": "comments",
+  "description": "description",
+   "name": "name",
+  "address": "address",
+  "User-Details": "User-Details",
+  "Please choose a user": "Please choose a user",
+  "Add User": "Add User",
+  "Edit User":"Edit User",
+ "Date is not selected": "Date is not selected"
+}

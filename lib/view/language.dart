@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../data/model/language_model.dart';
-
+import '../data/model/response/language_model.dart';
 
 class Language extends StatefulWidget {
    Language({Key? key}) : super(key: key);

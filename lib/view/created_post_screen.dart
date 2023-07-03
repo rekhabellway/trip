@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import '../controller/post_controller.dart';
-import '../data/model/post_model.dart';
+import '../controller/theme_controller.dart';
+import '../controller/user_controller.dart';
+import '../data/model/response/post_model.dart';
 
 class CreatePost extends StatefulWidget {
   final PostModel? model;
-
   CreatePost({Key? key, this.model}) : super(key: key);
 
   @override
@@ -18,12 +19,12 @@ class CreatePost extends StatefulWidget {
 class _CreatePostState extends State<CreatePost> {
   final _formkey = GlobalKey();
 
+  ThemeController themeController = Get.find<ThemeController>();
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
 
   final focusTitle = FocusNode();
   final focusDescription = FocusNode();
-
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -39,13 +40,16 @@ class _CreatePostState extends State<CreatePost> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor:
+          themeController.darkTheme ? Color(0xff2a2929) : Color(0xfff2f3ff),
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         automaticallyImplyLeading: true,
         elevation: 0,
-        backgroundColor: Colors.lightBlue,
+        backgroundColor:
+            themeController.darkTheme ? Colors.pink[800] : Colors.pink,
         title: Text(
-          "CretePost",
+          "CretePost".tr,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
@@ -56,20 +60,34 @@ class _CreatePostState extends State<CreatePost> {
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: TextButton(
                 onPressed: () {
+                  if (Get.find<UserController>().selectedUser == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      backgroundColor: Colors.red,
+                      content: Text("Please select an user"),
+                    ));
+                    return;
+                  }
                   if (Get.find<PostController>().imageFile == null) {
-                    SnackBar(content: Text('Please select image'));
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        backgroundColor: Colors.red,
+                        content: Text('Please select image')));
                     return;
                   }
                   if (titleController.text.isEmpty) {
-                    SnackBar(content: Text('Please enter title'));
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        backgroundColor: Colors.red,
+                        content: Text('Please enter title')));
                     return;
                   }
                   if (descriptionController.text.isEmpty) {
-                    SnackBar(content: Text('Please enter description'));
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        backgroundColor: Colors.red,
+                        content: Text('Please enter description')));
                     return;
                   }
                   if (widget.model == null) {
                     PostModel newModel = PostModel(
+                      userId: Get.find<UserController>().selectedUser!.id!,
                       id: Random().nextInt(10000),
                       image: Get.find<PostController>().imageFile!.path,
                       title: titleController.text,
@@ -80,6 +98,8 @@ class _CreatePostState extends State<CreatePost> {
                     Get.find<PostController>().addPost(newModel);
                     Get.back();
                   } else {
+                    widget.model!.userId =
+                        Get.find<UserController>().selectedUser!.id;
                     widget.model!.image =
                         Get.find<PostController>().imageFile!.path;
                     widget.model!.title = titleController.text;
@@ -89,9 +109,12 @@ class _CreatePostState extends State<CreatePost> {
                   }
                 },
                 child: Text(
-                  "Submit",
+                  "Submit".tr,
                   style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
+                      color: themeController.darkTheme
+                          ? Colors.pink[800]
+                          : Colors.pink,
+                      fontWeight: FontWeight.bold),
                 )),
           )),
       body: ListView(
@@ -103,11 +126,23 @@ class _CreatePostState extends State<CreatePost> {
                         onPressed: () {
                           _getFromGallery();
                         },
-                        child: Text("PICK FROM GALLERY"),
+                        child: Text(
+                          "PICK FROM GALLERY".tr,
+                          style: TextStyle(
+                            color: themeController.darkTheme
+                                ? Colors.pink[800]
+                                : Colors.pink,
+                          ),
+                        ),
                       )
-                    : Container(
-                        child: Image.file(
-                            File(Get.find<PostController>().imageFile!.path))));
+                    : InkWell(
+                        onTap: () {
+                          _getFromGallery();
+                        },
+                        child: Container(
+                            child: Image.file(File(
+                                Get.find<PostController>().imageFile!.path))),
+                      ));
           }),
           Form(
             key: _formkey,
@@ -115,11 +150,40 @@ class _CreatePostState extends State<CreatePost> {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
+                  GetBuilder<UserController>(builder: (userController) {
+                    return DropdownButton(
+                      hint: Text(
+                        'Please choose a user'.tr,
+                        style: TextStyle(
+                          color: themeController.darkTheme
+                              ? Color(0xfff2f3ff)
+                              : Color(0xff2a2929),
+                        ),
+                      ),
+                      value: userController.selectedUser,
+                      onChanged: (newValue) {
+                        userController.setSelectedUser(newValue!);
+                      },
+                      items: userController.users.map((location) {
+                        return DropdownMenuItem(
+                          child: Text(
+                            location.name!,
+                            style: TextStyle(
+                              color: themeController.darkTheme
+                                  ? Color(0xfff2f3ff)
+                                  : Color(0xff2a2929),
+                            ),
+                          ),
+                          value: location,
+                        );
+                      }).toList(),
+                    );
+                  }),
                   TextField(
                       controller: titleController,
                       focusNode: focusTitle,
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(), hintText: "title")),
+                          border: OutlineInputBorder(), hintText: "title".tr)),
                   SizedBox(
                     height: 10,
                   ),
@@ -127,8 +191,9 @@ class _CreatePostState extends State<CreatePost> {
                       controller: descriptionController,
                       focusNode: focusDescription,
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          hintText: "Description")),
+                        border: OutlineInputBorder(),
+                        hintText: "description".tr,
+                      )),
                 ],
               ),
             ),

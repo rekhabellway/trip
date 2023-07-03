@@ -1,0 +1,22 @@
+{
+  "select_language": "भाषा चुने",
+  "save": "बचाना",
+  "select_a_language": "भाषा चुनें",
+  "home": "घर",
+  "back_to_home": "घर वापिस जा रहा हूँ",
+  "CretePost": "पोस्ट बनाएं।",
+  "Post_Details": "भाषांतर",
+   "Post": "भाषांतर",
+  "Submit": "जमा करना",
+  "PICK FROM GALLERY":"गैलरी से चुनें",
+  "title": "शीर्षक",
+  "comments": "टिप्पणियाँ",
+  "description": "विवरण",
+  "name": "नाम",
+  "address": "पता",
+  "User-Details" : "उपयोगकर्ता विवरण",
+  "Please choose a user":"कृपया, एक उपयोगकर्ता चुनें",
+  "Add User": "उपयोगकर्ता जोड़ें",
+  "Edit User":"यूजर को संपादित करो",
+  "Date is not selected":"तिथि चयनित नहीं है"
+}
